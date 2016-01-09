@@ -20,6 +20,55 @@ struct transaction {
 	char description[20];
 };
 
+int dateCompare1(char* date1, char* date2){
+	if (date1[2] != '-' || date1[5] != '-' || date2[2] != '-' || date2[5] != '-')
+		return -2;
+
+	//Loop to compare Years
+	for (int i = 6; i < 10; i++){
+		if (date2[i] > date1[i])
+			return -1;
+		if (date2[i] < date1[i])
+			return 1;
+	}
+
+	//Loop to compare months
+	for (int i = 3; i < 5; i++){
+		if (date2[i] > date1[i])
+			return -1;
+		if (date2[i] < date1[i])
+			return 1;
+	}
+
+	//Loop to compare Dates
+	for (int i = 0; i < 2; i++){
+		if (date2[i] > date1[i])
+			return -1;
+		if (date2[i] < date1[i])
+			return 1;
+	}
+
+	return 0;
+}
+
 int countGreaterNumbers(struct transaction *Arr, int len, char *date) {
-	return -1;
+	if (Arr == 0 || date == 0)
+		return -1;
+	if (len <= 0)
+		return -1;
+
+	int cmp;
+	int i;
+
+	for (i = 0; i < len; i++){
+		cmp = dateCompare1(Arr[i].date, date);
+		if (cmp == 0 || cmp == -1) //Equal or lesser Date.
+			continue;
+		else if (cmp == -2) //Invalid Date
+			return -1;
+		else
+			break;
+	}
+
+	return len - i;
 }

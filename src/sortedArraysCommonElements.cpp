@@ -22,6 +22,60 @@ struct transaction {
 	char description[20];
 };
 
+int dateCompare3(char* date1, char* date2){
+	if (date1[2] != '-' || date1[5] != '-' || date2[2] != '-' || date2[5] != '-')
+		return -2;  //Invalid Date
+
+	//Loop to compare Years
+	for (int i = 6; i < 10; i++){
+		if (date2[i] > date1[i])
+			return -1;
+		if (date2[i] < date1[i])
+			return 1;
+	}
+
+	//Loop to compare months
+	for (int i = 3; i < 5; i++){
+		if (date2[i] > date1[i])
+			return -1;
+		if (date2[i] < date1[i])
+			return 1;
+	}
+
+	//Loop to compare Date
+	for (int i = 0; i < 2; i++){
+		if (date2[i] > date1[i])
+			return -1;
+		if (date2[i] < date1[i])
+			return 1;
+	}
+
+	return 0;
+}
+
+
 struct transaction * sortedArraysCommonElements(struct transaction *A, int ALen, struct transaction *B, int BLen) {
-	return NULL;
+	if (A == NULL || B == NULL || (ALen <= 0 && BLen <= 0))
+		return NULL;
+
+	struct transaction *merged = (struct transaction*) calloc(ALen+BLen, sizeof(struct transaction));
+
+	int cmp = 0;
+	int i = 0, j = 0, k = 0;
+	while (i < ALen && j < BLen){
+		cmp = dateCompare3(A[i].date, B[j].date);
+		if (cmp == -2)
+			return NULL;
+		if (cmp == 0){
+			merged[k] = A[i];
+			k++;
+		}
+		i++;
+		j++;
+	}
+
+	if (k == 0)
+		return NULL;
+
+	return merged;
 }
